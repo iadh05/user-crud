@@ -32,3 +32,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 -   Vuetify:Vuetify is a Vue UI Library supported by vuejs
 -   Msw : API mocking to simulate a back-end server
+-   Axios:Third party package to fetch
+-   Uuid:To generate Id for users
