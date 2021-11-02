@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserForm.vue should show the form element on the user output 1`] = `
+<v-layout class="flex-row align-center flex-none modal-user-container">
+  <v-flex cols="auto">
+    <v-dialog transition="dialog-bottom-transition" max-width="600"></v-dialog>
+  </v-flex>
+</v-layout>
+`;

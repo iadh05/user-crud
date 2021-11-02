@@ -1,28 +1,55 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <v-app>
+        <v-container>
+            <div>
+                <FormUser />
+            </div>
+            <DataTable
+                :items="getUsers"
+                :headers="headers"
+                :isLoading="isLoading"
+                @deleteByUserId="deleteByUserId"
+            />
+        </v-container>
+    </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import DataTable from "./components/DataTable.vue";
+import FormUser from "./components/UserForm.vue";
+import {mapActions, mapGetters} from "vuex";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    name: "App",
+    components: {
+        DataTable,
+        FormUser,
+    },
+    methods: {
+        ...mapActions(["fetchUsers", "deleteUser"]),
+        deleteByUserId(id) {
+            console.log("id :>> ", id);
+            this.deleteUser(id);
+        },
+    },
+    computed: {
+        ...mapGetters(["getUsers", "isLoading"]),
+
+        headers() {
+            return this.getUsers.length
+                ? Object.keys(this.getUsers[0])
+                      .map((el) => ({text: el, value: el}))
+                      .concat({text: "actions", value: ""})
+                : [];
+        },
+    },
+    created() {
+        this.fetchUsers();
+    },
+};
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    padding: 10 px;
 }
 </style>
