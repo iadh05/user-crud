@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    users: null,
+    users: [],
     isLoading: false,
     user: {
       firstName: "",
