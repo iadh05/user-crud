@@ -19,20 +19,22 @@
         >
             <template v-slot:item="{item}">
                 <tr>
-                    <td><TextHighlight :text="item.id" :search="search" /></td>
-                    <td>
+                    <td data-cy="id">
+                        <TextHighlight :text="item.id" :search="search" />
+                    </td>
+                    <td data-cy="firstName">
                         <TextHighlight
                             :text="item.firstName"
                             :search="search"
                         />
                     </td>
-                    <td>
+                    <td data-cy="lastName">
                         <TextHighlight :text="item.lastName" :search="search" />
                     </td>
-                    <td>
+                    <td data-cy="email">
                         <TextHighlight :text="item.email" :search="search" />
                     </td>
-                    <td>
+                    <td data-cy="address">
                         <TextHighlight :text="item.address" :search="search" />
                     </td>
                     <td class="actions-container">

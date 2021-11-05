@@ -34,3 +34,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 -   Msw : API mocking to simulate a back-end server
 -   Axios:Third party package to fetch
 -   Uuid:To generate Id for users
+
+### TODO
+
+-   test axios requests

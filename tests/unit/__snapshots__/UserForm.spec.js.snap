@@ -1,9 +1,78 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UserForm.vue should show the form element on the user output 1`] = `
-<v-layout class="flex-row align-center flex-none modal-user-container">
-  <v-flex cols="auto">
-    <v-dialog transition="dialog-bottom-transition" max-width="600"></v-dialog>
-  </v-flex>
-</v-layout>
+<div class="layout flex-row align-center flex-none modal-user-container">
+  <div class="flex cols"><button type="button" class="ma-2 white--text text-capitalize mx-1 v-btn v-btn--is-elevated v-btn--has-bg theme--light v-size--default primary"><span class="v-btn__content"><i aria-hidden="true" class="v-icon notranslate v-icon--left mdi mdi-plus theme--light"></i>
+            Add User
+        </span></button>
+    <div role="dialog" class="v-dialog__container">
+      <div role="document" tabindex="0" class="v-dialog__content v-dialog__content--active" style="z-index: 202;">
+        <transition-stub name="dialog-bottom-transition" appear="true">
+          <div class="v-dialog v-dialog--active" style="transform-origin: center center; max-width: 600px;">
+            <div class="v-card v-sheet theme--light">
+              <header class="v-sheet theme--dark v-toolbar primary" style="height: 64px;">
+                <div class="v-toolbar__content" style="height: 64px;">Create User</div>
+              </header>
+              <div class="v-card__text mt-3">
+                <form novalidate="novalidate" class="v-form">
+                  <div class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field">
+                    <div class="v-input__control">
+                      <div class="v-input__slot">
+                        <div class="v-text-field__slot"><label for="input-12" class="v-label v-label--active theme--light" style="left: 0px; position: absolute;">FirstName</label><input data-cy="firstName" id="input-12" type="text"></div>
+                      </div>
+                      <div class="v-text-field__details">
+                        <div class="v-messages theme--light">
+                          <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field">
+                    <div class="v-input__control">
+                      <div class="v-input__slot">
+                        <div class="v-text-field__slot"><label for="input-15" class="v-label v-label--active theme--light" style="left: 0px; position: absolute;">LastName</label><input data-cy="lastName" id="input-15" type="text"></div>
+                      </div>
+                      <div class="v-text-field__details">
+                        <div class="v-messages theme--light">
+                          <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field">
+                    <div class="v-input__control">
+                      <div class="v-input__slot">
+                        <div class="v-text-field__slot"><label for="input-18" class="v-label v-label--active theme--light" style="left: 0px; position: absolute;">Email</label><input data-cy="email" id="input-18" type="text"></div>
+                      </div>
+                      <div class="v-text-field__details">
+                        <div class="v-messages theme--light">
+                          <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field">
+                    <div class="v-input__control">
+                      <div class="v-input__slot">
+                        <div class="v-text-field__slot"><label for="input-21" class="v-label v-label--active theme--light" style="left: 0px; position: absolute;">Address</label><input data-cy="address" id="input-21" type="text"></div>
+                      </div>
+                      <div class="v-text-field__details">
+                        <div class="v-messages theme--light">
+                          <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="v-card__actions justify-end">
+                <div><button type="button" disabled="disabled" class="v-btn v-btn--disabled v-btn--text theme--light v-size--default"><span class="v-btn__content">Save</span></button></div> <button type="button" class="v-btn v-btn--text theme--light v-size--default"><span class="v-btn__content">Close</span></button>
+              </div>
+            </div>
+          </div>
+        </transition-stub>
+      </div>
+    </div>
+  </div>
+</div>
 `;

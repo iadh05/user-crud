@@ -1,56 +1,165 @@
-import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
-import { render } from '@vue/server-test-utils'
+import Vue from 'vue'
+import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils'
 import UserForm from '@/components/UserForm.vue'
 import Vuex from "vuex"
 import Vuetify from 'vuetify'
 
 
+// calls wrapper.destroy() after each test
+enableAutoDestroy(afterEach)
+
+
 const localVue = createLocalVue()
 
-localVue.use(Vuex)
+Vue.use(Vuetify);
 let actions
 let store
-let vuetify;
+let getters;
+let state
 describe('UserForm.vue', () => {
     beforeEach(() => {
-        vuetify = new Vuetify()
+        localVue.use(Vuex)
+        actions = {
+            updateUserFields: jest.fn(),
+            updateUser: jest.fn()
+        }
+        getters = {
+            getUser: (state) => ({ field }) => {
+                return state.user[field];
+            },
+
+        }
+        state = {
+            user: {
+                firstName: "jhon",
+                lastName: "doe",
+                email: "test@gmail.com",
+                address: '30 street'
+            }
+        }
+
+        store = new Vuex.Store({
+            actions,
+            getters,
+            state
+        })
+
+
     })
     it('should show the form element on the user output', () => {
         const wrapper = mount(UserForm, {
-            vuetify,
-            localVue
+            store,
+            localVue,
+            vuetify: new Vuetify,
+
+            data() {
+                return {
+                    dialog: true
+                }
+            },
         })
+
         expect(wrapper.html()).toMatchSnapshot()
     })
-    beforeEach(() => {
-        actions = {
-            actionClick: jest.fn(),
-            updateUserFields: jest.fn()
-        }
-        store = new Vuex.Store({
-            actions
-        })
-    })
+    it("should show update icon", () => {
+        const wrapper = mount(UserForm, {
+            store,
+            localVue,
+            vuetify: new Vuetify,
 
-    it('dispatches "actionInput" when input event value is "input"', async () => {
-        vuetify = new Vuetify()
-        const wrapper = await mount(UserForm, {
-            stubs: {
-
+            propsData: {
+                update: true,
+                icon: true
             }
         })
 
+        expect(wrapper.find("[data-cy='update']").exists()).toBe(true);
     })
-    it("changing the element's value, updates the v-model", () => {
-        const parent = mount(UserForm, {
-            store: { state }
+    it("should trigger update click", async () => {
+        const wrapper = mount(UserForm, {
+            store,
+            localVue,
+            vuetify: new Vuetify,
+
+            propsData: {
+                update: true,
+                icon: true
+            },
+            data() {
+                return {
+                    dialog: true
+                }
+            }
         })
 
-        const firstNameInputInnerTextField = parent.find('#firstname');
-        firstNameInputInnerTextField.element.value = "test";
-        firstNameInputInnerTextField.trigger('input');
 
-        expect(parent.vm.store.state.user.firstName).toBe("test");
+        const updateClick = wrapper.find("[data-cy='update-button']")
+        expect(updateClick.exists()).toBe(true);
+        const handleSubmit = jest.fn()
+        const firstNameInput = wrapper.find('[data-cy="firstName"]')
+        const lastNameInput = wrapper.find('[data-cy="lastName"]')
+        const emailInput = wrapper.find('[data-cy="email"]')
+        const addressInput = wrapper.find('[data-cy="address"]')
+        firstNameInput.setValue('jhon')
+        lastNameInput.setValue('doe')
+        emailInput.setValue('test@gmail.com')
+        addressInput.setValue('30 street')
 
+        await firstNameInput.trigger('[data-cy="firstName"]')
+        await lastNameInput.trigger('[data-cy="lastName"]')
+        await emailInput.trigger('[data-cy="email"]')
+        await addressInput.trigger('[data-cy="address"]')
+        await wrapper.setMethods({ handleSubmit })
+
+        expect(updateClick.attributes("disabled")).not.toBe("disabled")
+
+        await updateClick.trigger("click")
+
+        await wrapper.vm.$nextTick()
+
+        expect(handleSubmit).toHaveBeenCalled()
     })
+    it("inject props readonly", () => {
+        const wrapper = mount(UserForm, {
+            store,
+            localVue,
+            vuetify: new Vuetify,
+
+            propsData: {
+                readonly: true,
+                icon: true
+            }
+        })
+
+        expect(wrapper.find("[data-cy='readonly']").exists()).toBe(true);
+    })
+
+    it('dispatches "actionInput" when input event value is "input"', async () => {
+        const wrapper = mount(UserForm, {
+            store,
+            localVue,
+            vuetify: new Vuetify,
+
+            data() {
+                return {
+                    dialog: true
+                }
+            },
+        })
+        const firstNameInput = wrapper.find('[data-cy="firstName"]')
+        const lastNameInput = wrapper.find('[data-cy="lastName"]')
+        const emailInput = wrapper.find('[data-cy="email"]')
+        const addressInput = wrapper.find('[data-cy="address"]')
+        firstNameInput.setValue('jhon')
+        lastNameInput.setValue('doe')
+        emailInput.setValue('test@gmail.com')
+        addressInput.setValue('30 street')
+
+        await firstNameInput.trigger('[data-cy="firstName"]')
+        await lastNameInput.trigger('[data-cy="lastName"]')
+        await emailInput.trigger('[data-cy="email"]')
+        await addressInput.trigger('[data-cy="address"]')
+        expect(actions.updateUserFields).toHaveBeenCalled()
+    })
+
 })

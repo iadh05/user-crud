@@ -19,7 +19,9 @@ export default {
             for (const [index, item] of arr.entries()) {
                 result +=
                     item +
-                    (found[index] ? `<strong>${found[index]}</strong>` : "");
+                    (found[index]
+                        ? `<strong data-cy="highlighitedText">${found[index]}</strong>`
+                        : "");
             }
             return result;
         },

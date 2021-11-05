@@ -1,101 +1,95 @@
 <template>
     <v-layout class="flex-row align-center flex-none modal-user-container">
         <v-flex cols="auto">
-            <v-dialog transition="dialog-bottom-transition" max-width="600">
-                <template v-slot:activator="{on, attrs}">
-                    <v-icon
-                        class="mx-1 ma-2"
-                        v-if="icon && update"
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="getUserById(userId)"
-                        >mdi-pencil</v-icon
-                    >
-                    <v-icon
-                        class="mx-1 ma-2"
-                        v-bind="attrs"
-                        v-on="on"
-                        v-else-if="icon && readonly"
-                        @click="getUserById(userId)"
-                        >mdi-file-find</v-icon
-                    >
-                    <v-btn
-                        v-else
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="initFields"
-                        color="primary"
-                        class="ma-2 white--text text-capitalize mx-1"
-                    >
-                        <v-icon left> mdi-plus </v-icon>
-                        Add User
-                    </v-btn>
-                </template>
-                <template v-slot:default="dialog">
-                    <v-card>
-                        <v-toolbar color="primary" dark>{{
-                            displayTitle
-                        }}</v-toolbar>
-                        <v-card-text class="mt-3">
-                            <v-form v-model="validate">
-                                <v-text-field
-                                    label="FirstName"
-                                    v-model="firstName"
-                                    :rules="rules.required"
-                                    :readonly="readonly"
-                                    data-firstName
-                                ></v-text-field>
+            <v-icon
+                data-cy="update"
+                class="mx-1 ma-2"
+                v-if="icon && update"
+                @click="getUser"
+                >mdi-pencil</v-icon
+            >
+            <v-icon
+                class="mx-1 ma-2"
+                data-cy="readonly"
+                v-else-if="icon && readonly"
+                @click="getUser"
+                >mdi-file-find</v-icon
+            >
+            <v-btn
+                v-else
+                @click="initForm"
+                color="primary"
+                class="ma-2 white--text text-capitalize mx-1"
+            >
+                <v-icon left> mdi-plus </v-icon>
+                Add User
+            </v-btn>
 
-                                <v-text-field
-                                    label="LastName"
-                                    v-model="lastName"
-                                    :rules="rules.required"
-                                    :readonly="readonly"
-                                ></v-text-field>
+            <v-dialog
+                transition="dialog-bottom-transition"
+                max-width="600"
+                v-model="dialog"
+            >
+                <v-card>
+                    <v-toolbar color="primary" dark>{{
+                        displayTitle
+                    }}</v-toolbar>
+                    <v-card-text class="mt-3">
+                        <v-form v-model="validate">
+                            <v-text-field
+                                label="FirstName"
+                                v-model="firstName"
+                                :rules="rules.required"
+                                :readonly="readonly"
+                                data-cy="firstName"
+                            ></v-text-field>
 
-                                <v-text-field
-                                    v-model="email"
-                                    label="Email"
-                                    :rules="rules.email"
-                                    :readonly="readonly"
-                                ></v-text-field>
+                            <v-text-field
+                                label="LastName"
+                                v-model="lastName"
+                                :rules="rules.required"
+                                :readonly="readonly"
+                                data-cy="lastName"
+                            ></v-text-field>
 
-                                <v-text-field
-                                    v-model="address"
-                                    label="Address"
-                                    :rules="rules.required"
-                                    :readonly="readonly"
-                                ></v-text-field>
-                            </v-form>
-                        </v-card-text>
-                        <v-card-actions class="justify-end">
-                            <template v-if="!readonly">
-                                <v-btn
-                                    text
-                                    v-if="update"
-                                    :disabled="!validate"
-                                    @click="
-                                        updateUser(userId),
-                                            (dialog.value = false)
-                                    "
-                                    >Update</v-btn
-                                >
-                                <v-btn
-                                    text
-                                    v-else
-                                    :disabled="!validate"
-                                    @click="
-                                        createUser(), (dialog.value = false)
-                                    "
-                                    >Save</v-btn
-                                >
-                            </template>
-                            <v-btn text @click="dialog.value = false"
-                                >Close</v-btn
+                            <v-text-field
+                                v-model="email"
+                                label="Email"
+                                :rules="rules.email"
+                                :readonly="readonly"
+                                data-cy="email"
+                            ></v-text-field>
+
+                            <v-text-field
+                                v-model="address"
+                                label="Address"
+                                :rules="rules.required"
+                                :readonly="readonly"
+                                data-cy="address"
+                            ></v-text-field>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                        <div v-if="!readonly">
+                            <v-btn
+                                text
+                                v-if="update"
+                                :disabled="!validate"
+                                @click="handleSubmit"
+                                data-cy="update-button"
+                                >Update</v-btn
                             >
-                        </v-card-actions>
-                    </v-card>
-                </template>
+                            <v-btn
+                                text
+                                v-else
+                                :disabled="!validate"
+                                @click="handleSubmit"
+                                >Save</v-btn
+                            >
+                        </div>
+                        <v-btn text @click="dialog = false">Close</v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-dialog>
         </v-flex>
     </v-layout>
@@ -110,6 +104,7 @@ export default {
     data() {
         return {
             validate: false,
+            dialog: false,
             rules: {
                 required: [(v) => !!v || "Field is required"],
                 email: [
@@ -138,6 +133,23 @@ export default {
             "getUserById",
             "updateUser",
         ]),
+
+        initForm() {
+            this.initFields();
+            this.dialog = true;
+        },
+        getUser() {
+            this.getUserById(this.userId);
+            this.dialog = true;
+        },
+        handleSubmit() {
+            if (this.update) {
+                this.updateUser(this.userId);
+            } else {
+                this.createUser();
+            }
+            this.dialog = false;
+        },
     },
 };
 </script>
